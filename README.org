@@ -1,0 +1,67 @@
+* Including files
+
+  gol_parallel.c -- using pthread to play game of life, it ask 4 input paraments(input filename, steps, output filename, total threads), and  would product two files, one is the output file( such as,f_para.txt), the other is time result(time-width-height.txt). 
+
+  the example command : ./gameoflife random.txt 1000 f_para.txt 12
+
+  io.c -- save the final result(the end of the life)
+
+  gol_serial.c  -- using serial to play game of life, it would have output file, such as f_serial.txt
+
+
+  Makefile-- compile *.c files 
+
+  generate.py-- initialize any width, height, and save the data in the file of random.txt  
+
+  plot.py-- to plot the parallel time and serial time (using matplotlib)
+
+* other documents
+
+  6 figures -- compare the used time of pthread 
+
+  1 measures.xls -- compare the result 
+
+  1 cpuinfo.txt -- the testing environment
+
+***************************************************************************************************************************************
+* About Codes
+  main function 
+  long walltime_of_threads(int n_threads) --- create threads and allocate the calculate task, then return the wall-clock time
+  void* entry_function(void* p_i_thread)
+  void update_matrix(int begin_row, int end_row)
+ 
+  KEY1:calculate the number every thread would process, num=height/nthreads,
+  change the initillization of height, to allocate threads to run.
+  
+  KEY2: When the required number of threads have called pthread_barrier_wait() specifying the barrier,
+  the constant PTHREAD_BARRIER_SERIAL_THREAD shall be returned to one unspecified thread and 
+  zero shall be returned to each of the remaining threads. At this point, the barrier shall 
+  be reset to the state it had as a result of the most recent pthread_barrier_init() function that referenced it.
+   
+  // Barrier initialization
+     pthread_barrier_init(&barr, NULL, nthreads)
+  // Create the threads
+     pthread_create(&thr[i], NULL, &entry_function, (void *)&t_ids[i])
+  // Proccess's master thread waits for the execution of all threads
+     pthread_join(thr[i], NULL)
+  // synchronize at a barrier.
+     pthread_barrier_wait(&barrier);
+ 
+ 
+* About Testing elements
+
+  1 compiling:makefile
+
+  2 consuming time: 
+
+  different threads: 1-12
+
+  different generation/steps:  1000
+
+  different input: 10*100 100*1000 500*1000 1000*1000 
+  500*2000 1000*2000   
+
+  expect result: different time, best time. 
+
+   
+ 
