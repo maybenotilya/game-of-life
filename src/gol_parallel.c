@@ -91,7 +91,7 @@ void copy_matrix(char** matrix_from, char** matrix_to, int width, int height){
 //--------- write matrix_to according to matrix_from and the rule of game of life 
 void update_matrix(int begin_row, int end_row){
     int i,j;
-    for(i=begin_row;i<end_row+1;i++){
+    for(i=begin_row;i<end_row;i++){
 	for(j=1;j<width+1;j++){
 	    int sum = matrix_from[i-1][j-1]+matrix_from[i-1][j]+matrix_from[i-1][j+1]+matrix_from[i][j-1]+ 
 		matrix_from[i][j+1]+ matrix_from[i+1][j-1]+ matrix_from[i+1][j]+matrix_from[i+1][j+1];
@@ -119,7 +119,7 @@ void* entry_function(void* p_i_thread){
 
     // exclude extern cells
     if(i_thread==0) begin_row++;
-    if(i_thread==n_threads-1) end_row=height;
+    if(i_thread==n_threads-1) end_row=height + 1;
 
     // Play the game for steps
     int i;
